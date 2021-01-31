@@ -97,4 +97,26 @@ router.post("/getProducts", (req, res) => {
   }
 });
 
+//?id=${productId}&type=single
+router.get("/products_by_id", (req, res) => {
+  let { type, id: productId } = req.query;
+
+  if (type === "array") {
+    let productIds = productId.split(",");
+    productId = [];
+    productId = [...productIds];
+  }
+
+  // find single data record from DB by using this productId
+  Product.find({ _id: { $in: productId } })
+    .populate("writer")
+    .exec((err, product) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      return res.status(200).send(product);
+    });
+});
+
 module.exports = router;
+//Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum modi sunt veritatis distinctio mollitia. Reiciendis tempore maiores officiis unde soluta dolore exercitationem aliquid minima dignissimos ipsa reprehenderit libero voluptatibus quasi culpa neque aperiam voluptatum distinctio rem, dicta, ut repellat eos est. Vel nam cumque error velit ullam excepturi repellat sit!
